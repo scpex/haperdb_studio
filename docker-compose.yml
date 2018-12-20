@@ -1,0 +1,20 @@
+version: '2'
+services:
+  
+  studio:
+    container_name: studio
+    hostname: studio
+    build: ./studio
+    privileged: true
+    links:
+      - hdb
+    ports:
+      - 8080:8080
+    tty: true
+  
+  hdb:
+    container_name: hdb
+    hostname: hdb
+    build: ./hdb
+    privileged: true
+    tty: true
