@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+html
+    head
+        <meta charset="utf-8"/>
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        title HarperDB Studio
+        meta(name='description', content='')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        meta(name='robots', content='all,follow')
+        link(href='//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css', rel='stylesheet')
+        // Bootstrap CSS
+        link(href='../../vendor/bootstrap/css/bootstrap.min.css', rel='stylesheet')
+        link(href='../../vendor/switchery/switchery.min.css', rel='stylesheet')
+        link(href='../../styles/loader.css', rel='stylesheet')
+        // Font Awesome CSS
+        link(href='../../vendor/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+        // Fontastic Custom icon font
+        link(href='../../css/fontastic.css', rel='stylesheet')
+        // Google fonts - Roboto
+        link(href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700', rel='stylesheet')
+        // jQuery Circle
+        link(href='../../css/grasp_mobile_progress_circle-1.0.0.min.css', rel='stylesheet')
+        // Custom Scrollbar
+        link(href='../../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css', rel='stylesheet')
+        link(type="text/css", href='../../styles/pe-icons/pe-icon-7-stroke.css', rel='stylesheet')
+        // theme stylesheet
+        link#theme-stylesheet(href='../../css/style.default.css', rel='stylesheet')
+        link(href='../../css/daterangepicker.css', rel='stylesheet')
+        // Custom stylesheet - for your changes
+        link(href='../../css/custom.css', rel='stylesheet')
+        // Favicon
+        link(href='../../img/fav.png', rel='shortcut icon')
+        script(src='../../vendor/jquery/jquery.min.js')
+        script(src="../../vendor/switchery/switchery.min.js")
+        // Tweaks for older IEs
+        //if lt IE 9
+        script(src='https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js')
+        script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
+
+        script(src='../../vendor/jquery-ui/jquery-ui.min.js')
+        script.
+            (function ($) {
+            $('.spinner .btn:first-of-type').on('click', function () {
+                $('.spinner input').val(parseInt($('.spinner input').val(), 10) + 1);
+            });
+            $('.spinner .btn:last-of-type').on('click', function () {
+                $('.spinner input').val(parseInt($('.spinner input').val(), 10) - 1);
+            });
+            })(jQuery);
+    body(style=' background-color: #31343D')
+        script(src="../../scripts/live_link.js")
+        script(src="../../scripts/generate_graph.js")
+        input#graphDetail(type="hidden", name="graphDetail" value="#{graphDetail}")
+        nav.navbar.navbar-expand-lg.navbar-light(style=' background-color: #403F86')
+            .sidenav-header-inner.text-left
+                h2.h5(style="font-weight: normal;")
+            .sidenav-header-logo.ml-5
+                a.brand-small.text-center(href='/main')
+                img(src='../../img/harper.png', width='37', height='37')
+            .navbar-brand(style="color: white") HarperDB
+            button.navbar-toggler(data-target='#navbarText', data-toggle='collapse', type='button', aria-controls='navbarText', aria-expanded='false', aria-label='Toggle navigation')
+                span.navbar-toggler-icon        
+
+        section.content
+            .container
+                .row
+                    .col-md-12.mt-3                                             
+                        .largetitle.pull-left(style="color: white")
+                            if isFavorited == true
+                                i.fa.fa-star(style="color: yellow; margin-left: -32px;")
+                            | #{livelinkName}
+
+                    .col-md-12
+                        .chart_div
+                    .col-md-12.mt-3.mb-3
+                    .col-md-5
+                        div(style="height: 335px; background-color: #C6C8CA;")
+                            h4.pt-2.pl-2(style="color: #333") Notes
+                            p.pt-2.pl-2(style="color: #333") #{notes}
+                    .col-md-1
+                    .col-md-6.mb-5
+                        div(style="height: 300px; background-color: #C6C8CA;") 
+                            h4.pt-2.pl-2(style="color: #333") Another Graph Result
+                            .chart_div
+
+        // Javascript files
+        script(src='../../vendor/popper.js/umd/popper.min.js')
+        script(src='../../vendor/bootstrap/js/bootstrap.min.js')
+        script(src='../../js/grasp_mobile_progress_circle-1.0.0.min.js')
+        script(src='../../vendor/jquery.cookie/jquery.cookie.js')
+        //- script(src='../../vendor/chart.js/Chart.min.js')
+        script(src='../../vendor/jquery-validation/jquery.validate.min.js')
+        script(src='../../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js')
+        //- script(src='../../js/charts-home.js')
+        script(src="../../vendor/pacejs/pace.min.js")
+        script(src="../../vendor/datatables/datatables.min.js")
+        script(src="../../vendor/switchery/switchery.min.js")
+        script(src='../../js/moment.min.js')
+        script(src='../../js/daterangepicker.js')
+        script(src='../../js/jquery.editable.min.js')
+        // Main File
+        script(src='../../js/front.js')
+        script(src='../../vendor/toastr/toastr.min.js')
+
+        //google chart
+        script(src="https://www.gstatic.com/charts/loader.js")
+        script.           
+            $(document).ready(function () {                
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-full-width",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "15000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                var errorLivelink = '#{error}';                
+                if (errorLivelink)
+                    toastr.error(errorLivelink);
+            });

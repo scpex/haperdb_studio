@@ -1,0 +1,95 @@
+extends ./layout
+block link 
+    -var selected = 'Security';
+block content
+    script(src="/scripts/edit_user.js")
+    // Breadcrumb
+    .breadcrumb-holder
+        .container-fluid
+            ul.breadcrumb
+                li.breadcrumb-item
+                    a(href='/security') Security Home
+                li.breadcrumb-item.active Edit user
+    .pagebox
+        - var thisUser = JSON.stringify(user);
+        input#thisUser(type="hidden", name="user" value="#{thisUser}")
+        // Counts Section
+        section.dashboard-counts
+            .boxdisplay.row
+                .col-md-1
+                    header
+                        i.fa.fa-user-circle.usericon(style='font-size:80px')
+                .col-md-11
+                    header
+                        .pull-left.mr-3.midtitle.pb-2 #{user.username}
+                        //- .btn-group.pull-left
+                        //-     button.btn.dropdown-toggle.minwidthcombobox(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Select Schema
+                        //-     .dropdown-menu
+                        //-         a.dropdown-item(href='#') Schema 1
+                        //-         a.dropdown-item(href='#') Schema 2
+                        //-         a.dropdown-item(href='#') Schema 3
+                        .pull-right
+                            if(user.active)
+                                input.js-switch(type="checkbox", checked, onchange='toggleActive("#{user.username}");')
+                            else
+                                input.js-switch(type="checkbox", onchange='toggleActive("#{user.username}");')
+                        //- a.btn.btn-main.minwidthcombobox.pull-right.mr-5(href='sqlsearchchart.html') Copy User
+                        p.pull-right.mr-3 Active
+                    .clear.pull-left.mt-2
+                        input#newPassword.mr-1.pl-1(type='password', placeholder='password')
+                        a.btn.btn-main.minwidthcombobox.pull-right.mr-5(onclick="resetPassword()") Reset Password
+                    header.clear
+                        .boxdisplay.subheader Activity logs
+                    .row
+                        .col-md-12
+                            table.table.table-striped
+                                thead
+                                    tr
+                                        th(scope='col')
+                                tbody
+                                    tr
+                                        td
+                                    tr
+                                        td
+                                    tr
+                                        td
+                                    tr
+                                        td
+                            #usersTable_length.dataTables_length.pull-left
+                                label
+                                    | Show
+                                    select.form-control.input-sm.selectinput(name='usersTable_length', aria-controls='usersTable')
+                                        option(value='10') 10
+                                        option(value='50') 50
+                                        option(value='100') 100
+                                        option(value='-1') All
+                                    |  entries
+                            #usersTable_paginate.dataTables_paginate.paging_simple_numbers.pull-right
+                                ul.pagination
+                                    li#usersTable_previous.paginate_button.previous.disabled
+                                        a(href='#', aria-controls='usersTable', data-dt-idx='0', tabindex='0') Previous
+                                    li.paginate_button.active
+                                        a(href='#', aria-controls='usersTable', data-dt-idx='1', tabindex='0') 1
+                                    li#usersTable_next.paginate_button.next.disabled
+                                        a(href='#', aria-controls='usersTable', data-dt-idx='2', tabindex='0') Next
+            header
+                .boxdisplay.largetitle
+                    .pull-right
+                        i.fa.fa-trash(data-toggle='modal', data-target='#deleteUserModal', style='margin-right:10px;' data-id="#{user.username}")
+            // Modal
+            #deleteUserModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true')
+                .modal-dialog.modal-dialog-centered(role='document')
+                    .modal-content
+                        .modal-header
+                            #exampleModalLongTitle.modal-title.text-white Are you sure?
+                            button.close(type='button', data-dismiss='modal', aria-label='Close')
+                                i.fa.fa-times.text-red
+                        .modal-body.text-white
+                            p
+                                | Deleting this user is a permanent action and cannot be undone.
+                        .modal-footer
+                            .col-md-12.p-0
+                                button#DeleteUserBtn.btn.btn-maindelete.pull-right(type='button', style='min-width:150px;', data-toggle='dropdown', data-dismiss='modal', aria-haspopup='true', aria-expanded='false')
+                                    | Delete
+                                button.btn.btn-mainexit.pull-left(type='button', style='min-width:150px;', data-toggle='dropdown', data-dismiss='modal', aria-haspopup='true', aria-expanded='false')
+                                    | Exit

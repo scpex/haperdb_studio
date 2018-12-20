@@ -1,0 +1,293 @@
+extends ./layout
+
+block link
+    -var selected = 'Explore';
+block content
+    script(src="../../textcomplete/package/dist/textcomplete.js")
+    script(src="../../scripts/sql_search.js")
+    script(src="../../scripts/chart_sql_search.js")
+    script(src="../../scripts/generate_graph.js")    
+    input#keywordForAuto(name="keyword", type="hidden", value="#{keywords}")
+    - var thisSchemas = JSON.stringify(schemas);
+    input#schemaAll(name="schemaAll", type="hidden", value="#{thisSchemas}")
+    input#sqlLink(name="sqlLink", type="hidden", value="#{sqlLink}")
+    input#livelinkObjectEdit(name="livelinkObjectEdit", type="hidden", value="#{livelinkObject}")    
+    - var functions = ['ABS', 'CONCAT', 'EXP', 'IF', 'IFNULL', 'INSTR', 'LEN', 'LOWER', 'LTRIM', 'RTRIM', 'MAX', 'MIN', 'SUBSTRING', 'REGEXP_LIKE', 'ISNULL', 'RANDOM', 'ROUND', 'CEIL', 'FLOOR', 'ROWNUM', 'SQRT', 'TRIM', 'UPPER', 'CONCAT_WS', 'MEDIAN', 'QUART'];
+    .breadcrumb-holder
+        .container-fluid
+            ul.breadcrumb
+                if breadcrumb != undefined
+                    if breadcrumb.path != undefined
+                        li.breadcrumb-item 
+                            a(href='#{breadcrumb.path}') #{breadcrumb.name}
+                    else
+                        li.breadcrumb-item 
+                            a(href='/explore') Explore Home
+                else
+                    li.breadcrumb-item 
+                        a(href='/explore') Explore Home
+                li.breadcrumb-item.active SQL 
+    // Counts Section
+    .m-20
+        // Counts Section
+        section.dashboard-counts
+            div
+                .row
+                    .col-3
+                        .contentbackground.p-3(style='overflow:auto;')
+                            .secondheader
+                                .midtitle.text-white
+                                    | Data Model
+                            .wrapper.count-title.d-flex
+                                i.fa.fa-search(aria-hidden='true')
+                                .name.ml-3
+                                    input#searchSchema(type='text')
+                            .form-group
+                                ul.tree(style='z-index:10000')
+                                    - var schemaIndex = 1;
+                                    each schemaVal, schemaProp in schemas
+                                        - var cId = 'c' + schemaIndex; 
+                                        li.lidragable(id="#{schemaProp}", value='#{schemaProp}' class="forsearch_#{schemaProp}")
+                                            input(id="#{cId}", type='checkbox', checked='checked')
+                                            label.tree_label.doubleclick(for='#{cId}', value='#{schemaProp}')
+                                                i.fa.fa-caret-down
+                                                |  #{schemaProp}
+                                            ul
+                                                if schemas[schemaProp] != undefined
+                                                    - var tableIndex = 1;
+                                                    each tableVal, tableProp in schemas[schemaProp]
+                                                        - var tId = cId + 't' + tableIndex;
+                                                        li.lidragable(value='#{schemaProp}.#{tableProp}', class="forsearch_#{schemaProp}_#{tableProp}")
+                                                            input(id="#{tId}", type='checkbox', checked='checked')
+                                                            label.tree_label.doubleclick(for='#{tId}', value='#{schemaProp}.#{tableProp}')
+                                                                i.fa.fa-caret-down
+                                                                |  #{tableProp}
+                                                            ul
+                                                                if schemas[schemaProp][tableProp] != undefined
+                                                                    if schemas[schemaProp][tableProp]["attributes"] != undefined
+                                                                        each attributesValue, attributesProp in schemas[schemaProp][tableProp]['attributes']
+                                                                            li.lidragable(value="#{attributesValue['attribute']}" class="forsearch_#{schemaProp}_#{tableProp}_#{attributesValue['attribute']}")
+                                                                                span.tree_label.doubleclick(value="#{attributesValue['attribute']}" style="cursor: context-menu;")= attributesValue['attribute']
+                                                        - tableIndex ++;
+                                        - schemaIndex ++
+
+                    .col-6.p-0.searchbox(style='z-index:1;')
+                        .contentbackground.p-3(style='overflow:auto;')
+                            .secondheader
+                                .midtitle.text-white
+                                    | SQL 
+                                    a.btn.btn-main.pull-right(href='/explore/filter_search', aria-expanded='false', aria-haspopup='true') Filter Search
+                            .form-group
+                                textarea#exampleTextarea.w-100.p-1(placeholder='Type sql here', rows='3', value="#{sqlLink}")
+                            div
+                                button#runSQL.btn.btn-main.pull-right.min-100(type='button', role='button', aria-controls='collapseResult', aria-expanded='false') Run
+                        #collapseResult.contentbackground.text-white.p-3.collapse
+                            .secondheader
+                                .midtitle
+                                    | Results
+                                    //- .pull-right
+                                    //-     i.fa.fa-sign-out(data-target='#shareLivelinkModal', data-toggle='modal', style='margin-right:10px;')
+                                    //- .pull-right
+                                    //-     i.fa.fa-save(data-target='#saveModalCenter', data-toggle='modal', style='margin-right:10px;')
+                                    //- .pull-right
+                                    //-     i.fa.fa-refresh(style='margin-right:10px;')
+                            div
+                                .row(style='overflow:auto')
+                                    .col-md-12
+                                        div
+                                            table#resultTable.table.table-striped
+
+                        // chart
+                        #collapseResultChart.contentbackground.text-white.p-3.collapse
+                            .secondheader
+                                .midtitle
+                                    | Results                                    
+                                    .pull-right 
+                                        i.fa.fa-sign-out(data-target='#shareLivelinkModal', data-toggle='modal', style='margin-right:10px;')
+                                    .pull-right
+                                        i.fa.fa-save(data-target='#saveLivelinkCenter', data-toggle='modal', style='margin-right:10px;')
+                                    .pull-right
+                                        i.fa.fa-refresh.fa-refresh-search(style='margin-right:10px;')
+                                    .pull-right 
+                                        input.star-favor.mr-3#set-favor-star(style="margin-top: -20px" type='checkbox', title='bookmark', checked)
+                                    //- .pull-right
+                                        i.fa.fa-cog(data-target='#saveModalCenter', data-toggle='modal', style='margin-right:10px;')
+
+                            div
+                                .row(style='overflow:auto')
+                                    .col-md-12
+                                        div#chart_div.wrapper-graph
+
+
+                    #functionbox.col-3(style='overflow:auto;')
+                        .contentbackground.pb-3(style='overflow:auto;')
+                            ul.nav.nav-tabs(role='tablist')
+                                li.nav-item
+                                    a.nav-link.active(data-toggle='tab', href='#functions', role='tab') Functions
+                                li.nav-item
+                                    a.nav-link(data-toggle='tab', href='#buzz', role='tab') Charts
+                            // Tab panes
+                            .tab-content.p-3.text-white.-md-6
+                                #functions.tab-pane.row.active(role='tabpanel')
+                                    each fun in functions
+                                        .col-md-6.btnfunction
+                                            .dragablebtn.btn.btn-main.w-100.btn-b-10.doubleclick(value='#{fun}')
+                                                | #{fun}
+                                #buzz.tab-pane.fade(role='tabpanel')
+                                    div Format your chart
+                                    .btn-group
+                                        select#type-chart(name="").form-controls.minwidthcombobox Area
+                                            option(value='Area') Area
+                                            option(value='Bar') Bar
+                                            option(value='Bubble') Bubble
+                                            option(value='Column') Column
+                                            option(value='Gauge') Gauge
+                                            option(value='GeoChart') GeoChart
+                                            option(value='Line') Line
+                                            option(value='Map') Map
+                                            option(value='Pie') Pie                                            
+                                            option(value='Scatter') Scatter
+                                            option(value='SteppedArea') Stepped Area                                                                                        
+                                            option(value='Treemap') Treemap
+
+                                    .pt-3 Chart Title
+                                    input#chartTitle(type='text').form-controls
+                                    //- .pt-3 Chart Subtitle
+                                    //- input#chartSubtitle(type='text').form-controls
+                                    .pt-3 Axis
+                                    .pl-4
+                                        .pt-3 X Axis Label
+                                        select#hTitle(type='text').form-controls
+                                        .pt-3 Y Axis Label
+                                        select#vTitle(type='text').form-controls
+                                    .pt-3(style="text-align: center")
+                                        button.btn.btn-main.w-100.btn-b-10#clickGenerateChart Generate
+            // Modal save SQL
+            #saveModalCenter.modal.fade(role='dialog', aria-hidden='true', aria-labelledby='exampleModalCenterTitle', tabindex='-1')
+                .modal-dialog.modal-dialog-centered(role='document')
+                    .modal-content
+                        form#favoriteForm
+                            .modal-header
+                                #exampleModalLongTitle.modal-title.text-white Save Search
+                                button.close(data-dismiss='modal', type='button', aria-label='Close')
+                                    i.fa.fa-times.text-red
+                            .modal-body
+                                .row.filterrow.p-3
+                                    // Count item widget
+                                    .row.w-100
+                                        .col-md-4.wtitle
+                                            .boxdisplay-6.text-right Name
+                                        .col-md-8
+                                            input#favoriteName.form-control.minwidthtextbox(type='text', style='float:left; max-width:250px; margin-right:5px;', required)
+                                    .row.w-100
+                                        .col-md-4.wtitle
+                                            .boxdisplay-6.text-right Live Results URL
+                                        .col-md-8
+                                            input.form-control.minwidthtextbox#liveLinkSQL(type='text', style='float:left;  max-width:250px; margin-right:5px;', readonly)
+                                            button.btn.btn-main.pull-left(type='button', aria-expanded='false', aria-haspopup='true', onclick="copySqlLink()") Copy
+                                    .row.w-100
+                                        .col-md-4.wtitle
+                                            .boxdisplay-6.text-right Notes
+                                        .col-md-8
+                                            input#favoriteNote.form-control.minwidthtextbox.w-100(type='text', style='float:left; margin-right:5px;')
+                            .modal-footer
+                                .col-md-12.text-center
+                                    button.btn.btn-mainadd(type='submit', aria-expanded='false', aria-haspopup='true', style='min-width:150px; ')
+                                        | Save
+
+
+
+            // save live link
+            #saveLivelinkCenter.modal.fade(role='dialog', aria-hidden='true', aria-labelledby='exampleModalCenterTitle', tabindex='-1')
+                .modal-dialog.modal-dialog-centered(role='document')
+                    .modal-content
+                        form#livelinkForm
+                            .modal-header
+                                #exampleModalLongTitle.modal-title.text-white Save Live Link
+                                button.close(data-dismiss='modal', type='button', aria-label='Close')
+                                    i.fa.fa-times.text-red
+                            .modal-body
+                                .row.filterrow.p-3
+                                    // Count item widget
+                                    .row.w-100
+                                        .col-md-4.wtitle
+                                            .boxdisplay-6.text-right Name
+                                        .col-md-8
+                                            input#livelinkName.form-control.minwidthtextbox(type='text', style='float:left; max-width:250px; margin-right:5px;', required)
+                                    .row.w-100
+                                        .col-md-4.wtitle
+                                            .boxdisplay-6.text-right Live Results URL
+                                        .col-md-8
+                                            input.form-control.minwidthtextbox#liveLinkUrl(type='text', style='float:left;  max-width:250px; margin-right:5px;', disabled)
+                                            button.btn.btn-main.pull-left(type='button', aria-expanded='false', aria-haspopup='true', onclick="copyLiveLinkNotSave()") Copy
+                                    .row.w-100
+                                        .col-md-4.wtitle
+                                            .boxdisplay-6.text-right Notes
+                                        .col-md-8
+                                            input#livelinkNote.form-control.minwidthtextbox.w-100(type='text', style='float:left; margin-right:5px;')
+                            .modal-footer
+                                .col-md-12.text-center
+                                    button.btn.btn-mainadd(type='submit', aria-expanded='false', aria-haspopup='true', style='min-width:150px; ' value='save')
+                                        | Save
+                                    button#updateExistingBtn.btn.btn-mainadd.ml-3(type='submit', aria-expanded='false', aria-haspopup='true', style='min-width:150px; ' value='update')
+                                        | Update Existing
+
+
+            // share live link
+            #shareLivelinkModal.modal.fade(role='dialog', aria-hidden='true', aria-labelledby='exampleModalCenterTitle', tabindex='-1')
+                .modal-dialog.modal-dialog-centered(role='document')
+                    .modal-content
+                        form
+                            .modal-header
+                                #exampleModalLongTitle.modal-title.text-white Share Live Link Results 
+                                button.close(data-dismiss='modal', type='button', aria-label='Close')
+                                    i.fa.fa-times.text-red
+                            .modal-body
+                                .row.filterrow.p-3
+                                    .row.w-100
+                                        .col-md-4.wtitle
+                                            .boxdisplay-6.text-right Live Results URL
+                                        .col-md-8
+                                            input.form-control.minwidthtextbox#liveLinkShareUrl(type='text', style='float:left;  max-width:250px; margin-right:5px;', readonly)
+                                            button.btn.btn-main.pull-left(type='button', aria-expanded='false', aria-haspopup='true', onclick="copyLiveLinkShare()") Copy
+                                    .row.w-100
+                                        .col-md-4.wtitle
+                                            .boxdisplay-6.text-right Share Exisiting
+                                        .col-md-8
+                                            select#livelinkList.form-control.minwidthtextbox.w-100(type='text', style='float:left; margin-right:5px;')                            
+
+
+            script.
+                $('.lidragable').draggable({
+                helper: function (event) {
+                return $(event.target).clone().css({
+                width: $(event.target).width(),
+                });
+                },
+                appendTo: '.searchbox',
+                zIndex: 2,
+                start: function (event, ui) {
+                ui.helper.css('color', '#888');
+                }
+                });
+                $('.dragablebtn').draggable({
+                helper: function (event) {
+                return $(event.target).clone().css({
+                width: '200px'
+                });
+                },
+                start: function (event, ui) {
+                ui.helper.css('max-width', '200px');
+                },
+                opacity: 0.7,
+                appendTo: '.searchbox',
+                zIndex: 2
+                });
+                $("#exampleTextarea").droppable({
+                drop: function (event, button) {                    
+                    var dragValue = $(button.draggable).attr('value') + " ";
+                    var curSelectCusror = document.getElementById('exampleTextarea').selectionStart
+                    this.value = this.value.substring(0, curSelectCusror) + dragValue + this.value.substring(curSelectCusror, this.value.length) + " ";                    
+                    document.getElementById('exampleTextarea').selectionEnd  = curSelectCusror +  dragValue.length;
+                }
+                });

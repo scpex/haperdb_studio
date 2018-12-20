@@ -1,0 +1,125 @@
+doctype html
+html
+    head
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        link(href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900', rel='stylesheet', type='text/css')
+        // Page title
+        title HarperDB Studio
+        // Vendor styles
+        link(rel='stylesheet', href='vendor/fontawesome/css/font-awesome.css')
+        link(rel='stylesheet', href='vendor/animate.css/animate.css')
+        link(rel='stylesheet', href='vendor/bootstrap/css/bootstrap.css')
+        // App styles
+        link(rel='stylesheet', href='styles/pe-icons/pe-icon-7-stroke.css')
+        link(rel='stylesheet', href='styles/pe-icons/helper.css')
+        link(rel='stylesheet', href='styles/stroke-icons/style.css')
+        link(rel='stylesheet', href='styles/style.css')
+    body.blank
+
+        // Wrapper
+        .wrapper
+            // Main content
+            section.content
+                .back-link
+                input#error(type="hidden", name="error" value="#{error}")
+                .container-center.animated.slideInDown
+                    .view-header
+                        .header-icon
+                            i.pe.page-header-icon.pe-7s-unlock
+                        .header-title
+                            img(src="images/white_300x100.png" style="width:200px; margin-top:-8px;")
+                            p #{error}
+
+                    .panel.panel-filled
+                        .panel-body
+                            form#loginForm(action='/login', novalidate='' method='post')
+                                input(type="hidden" id="ref" value="#{ref}" name="ref")
+                                .form-group(style="text-align: center;")
+                                    button(type="button" onclick="getHarperDB()").btn.btn-accent Download HarperDB
+                                .form-group
+                                    label.control-label(for='username') Username
+                                    input#username.form-control(name='username' type='text',
+
+                                    placeholder='', title='Please enter your username', required='' value='')
+                                .form-group
+                                    label.control-label(for='password') Password
+                                    input#password.form-control(name='password' type='password'
+                                    title='Please enter your password' placeholder=''  required='' value='')
+
+                                .panel.panel-filled.panel-c-accent.panel-collapse(style="margin-bottom: 10px")
+                                    .panel-heading(style="padding: 7px")
+                                        .panel-tools
+                                            a.panel-toggle
+                                                i.fa.fa-chevron-down
+
+                                        |                            Connection
+                                    .panel-body
+                                        .form-group
+                                            label.control-label(for='endpoint_url') Endpoint URL
+                                            input#endpoint_url.form-control(name='endpoint_url' type='ip',
+                                            title='Please enter the ip or url HarperDB', value='#{default_host}', placeholder='localhost', required='')
+                                        .form-group
+                                            label.control-label(for='endpoint_port') Endpoint Port
+                                            input#endpoint_port.form-control(name='endpoint_port' type='text',
+                                            title='Please enter the port for HarperDB',value='#{default_port}', placeholder='', required='')
+
+
+
+
+
+                                div
+                                    button(type="submit").btn.btn-accent Login                                    
+            // End main content
+            // End wrapper
+            // Vendor scripts
+            script(src='vendor/pacejs/pace.min.js')
+            script(src='vendor/jquery/dist/jquery.min.js')
+            script(src='vendor/bootstrap/js/bootstrap.min.js')
+            script(src='vendor/toastr/toastr.min.js')
+            script(src='../../js/platform.js')
+            // App scripts
+            script(src='scripts/luna.js')
+            script.
+                $(document).ready(function () {
+                    let errMsg = document.getElementById('error').value;
+                    if(errMsg != 'undefined'){
+                        toastr.error(errMsg);
+                    }
+                });
+                const getHarperDB = function (){
+                    let os = platform.os.family.toLowerCase().replace(/\s/g, "");
+                    let isDownload = false
+                    if(os.includes('window')){
+                        window.open("https://hub.docker.com/r/harperdb/hdb/");
+                    }
+                    else if (os.includes('linux') || os.includes('ubuntu') || os.includes('mint') || os.includes('debian')){
+                        os = 'linux'
+                        isDownload = true
+                    }
+                    else if (os.includes('mac') || os.includes('osx')){
+                        os = 'mac'
+                        isDownload = true
+                    }
+                    else if (os.includes('arm8')){
+                        os = 'ARM 8'
+                        isDownload = true
+                    }
+                    else if (os.includes('arm7')){
+                        os = 'ARM 7'
+                        isDownload = true
+                    }
+                    else if (os.includes('arm6')){
+                        os = 'ARM 6'
+                        isDownload = true
+                    }
+                    else {
+                        os = 'Linux'
+                        isDownload = true
+                    }
+                    if (isDownload){
+                        window.location.href = "https://products.harperdb.io/api/update?os=" + os
+                    }
+                }
+

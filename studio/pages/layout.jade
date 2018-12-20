@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+html
+  head
+    <meta charset="utf-8"/>
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    <meta name="google" content="notranslate">
+    title HarperDB Studio
+    meta(name='description', content='')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='robots', content='all,follow')
+    link(href='//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css', rel='stylesheet')
+    // Bootstrap CSS
+    link(href='../../vendor/bootstrap/css/bootstrap.min.css', rel='stylesheet')
+    link(rel='stylesheet', href='../../vendor/switchery/switchery.min.css')
+    link(rel='stylesheet', href='../../styles/loader.css')
+    // Font Awesome CSS
+    link(href='../../vendor/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+    // Fontastic Custom icon font
+    link(href='../../css/fontastic.css', rel='stylesheet')
+    // Google fonts - Roboto
+    link(href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700', rel='stylesheet')
+    // jQuery Circle
+    link(href='../../css/grasp_mobile_progress_circle-1.0.0.min.css', rel='stylesheet')
+    // Custom Scrollbar
+    link(href='../../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css', rel='stylesheet')
+    link(rel='stylesheet',type="text/css", href='../../styles/pe-icons/pe-icon-7-stroke.css')
+    // theme stylesheet
+    link#theme-stylesheet(href='../../css/style.default.css', rel='stylesheet')
+    link(rel='stylesheet', href='../../css/daterangepicker.css')
+    // Custom stylesheet - for your changes
+    link(href='../../css/custom.css', rel='stylesheet')
+    // Favicon
+    link(href='../../img/fav.png', rel='shortcut icon')
+    script(src='../../vendor/jquery/jquery.min.js')
+    script(src="../../vendor/switchery/switchery.min.js")
+    // Tweaks for older IEs
+    //if lt IE 9
+    script(src='https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js')
+    script(src='https://oss.maxcdn.com/respond/1.4.2/respond.min.js')
+
+    script(src='../../vendor/jquery-ui/jquery-ui.min.js')
+    script.
+      (function ($) {
+      $('.spinner .btn:first-of-type').on('click', function () {
+          $('.spinner input').val(parseInt($('.spinner input').val(), 10) + 1);
+      });
+      $('.spinner .btn:last-of-type').on('click', function () {
+          $('.spinner input').val(parseInt($('.spinner input').val(), 10) - 1);
+      });
+      })(jQuery);
+  body
+    block link
+      -var selected  = 'Main';
+
+    - var menu = { 'Main': '/main', 'Explore': '/explore', 'Schema': '/schema', 'Health': '/health', 'Help': '/help'};
+    if user['super_admin'] == true
+      - menu = { 'Main': '/main', 'Explore': '/explore', 'Schema': '/schema', 'Security': '/security', 'Health': '/health', 'Logs': '/logs', 'Help': '/help'};    
+    -var icons = { 'Main': 'icon-home', 'Explore': 'fa fa-compass', 'Schema': 'fa fa-share-alt', 'Security': 'fa fa-users', 'Health': 'fa fa-line-chart', 'Logs': 'fa fa-cube', 'Help': 'fa fa-question'};
+    // Side Navbar
+    nav.side-navbar
+      .side-navbar-wrapper
+        // Sidebar Header
+        .sidenav-header.d-flex.align-items-left.justify-content-left
+          // User Info
+          .sidenav-header-inner.text-left
+            h2.h5(style="font-weight: normal;")
+              img(src='../../img/harper.png', width='27', height='27')
+              | HarperDB
+          // Small Brand information, appears on minimized sidebar
+          .sidenav-header-logo
+            a.brand-small.text-center(href='/main')
+              img(src='../../img/harper.png', width='37', height='37')
+        // Sidebar Navigation Menus
+        .main-menu
+          ul#side-main-menu.side-menu.list-unstyled
+             each val, key in menu
+              if selected === key
+                li.active
+                 a(href=val, title=key)
+                  i(class="#{icons[key]}")
+                  | #{key}
+              else
+                li
+                  a(href=val, title=key)
+                    i(class="#{icons[key]}")
+                    | #{key}
+    .page
+      // navbar
+      header.header
+        nav.navbar
+          .container-fluid
+            .navbar-holder.d-flex.align-items-center.justify-content-between
+              .navbar-header
+                a#toggle-btn.menu-btn(href='#')
+                  i.icon-bars  
+                a.navbar-brand(href='/main')
+                  .brand-text.d-none.d-md-inline-block
+                    span Hello #{user['username']} 
+              ul.nav-menu.list-unstyled.d-flex.flex-md-row.align-items-md-center
+                li.nav-item.dropdown
+                li.nav-item
+                  a.nav-link.logout(href='/logout')
+                    | LOGOUT
+      // Counts Section
+      section.content
+        block content    
+      footer.main-footer
+        .container-fluid
+          .row
+            .col-sm-6
+              p HarperDB Studio © 2018
+    // Javascript files
+    script(src='../../vendor/popper.js/umd/popper.min.js')
+    script(src='../../vendor/bootstrap/js/bootstrap.min.js')
+    script(src='../../js/grasp_mobile_progress_circle-1.0.0.min.js')
+    script(src='../../vendor/jquery.cookie/jquery.cookie.js')
+    //- script(src='../../vendor/chart.js/Chart.min.js')
+    script(src='../../vendor/jquery-validation/jquery.validate.min.js')
+    script(src='../../vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js')
+    //- script(src='../../js/charts-home.js')
+    script(src="../../vendor/pacejs/pace.min.js")
+    script(src="../../vendor/datatables/datatables.min.js")
+    script(src="../../vendor/switchery/switchery.min.js")
+    script(src='../../js/moment.min.js')
+    script(src='../../js/daterangepicker.js')
+    script(src='../../js/jquery.editable.min.js')
+    // Main File
+    script(src='../../js/front.js')
+    script(src='../../vendor/toastr/toastr.min.js')
+
+    //google chart
+    script(src="https://www.gstatic.com/charts/loader.js")    

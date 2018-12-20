@@ -1,0 +1,41 @@
+extends ./layout
+
+block link
+  -var selected = 'Help';
+block content
+    // Counts Section
+    .pagebox
+        section.dashboard-counts
+            header
+                .boxdisplay
+                    .largetitle.pull-left Help
+        section
+            .clear.pt-5
+                .row.text-center.m-3.midtitle.text-white
+                    .col-md-5
+                        a.whitelink(href='https://docs.harperdb.io/' target="_blank")
+                            div
+                                .helpmenuparent
+                                    .helpmenumiddle
+                                        .helpmenucircle
+                                            i.fa.fa-file(aria-hidden='true')                                        
+                        div
+                            | Docs
+                    .col-md-5
+                        a.whitelink(href=' https://harperdbhelp.zendesk.com/hc/en-us/requests/new' target="_blank")
+                            div
+                                .helpmenuparent
+                                    .helpmenumiddle
+                                        .helpmenucircle
+                                            i.fa.fa-pencil(aria-hidden='true')
+                        div
+                            | Open a Ticket
+                    //- .col-md-4
+                    //-     a.whitelink
+                    //-         div
+                    //-             .helpmenuparent
+                    //-                 .helpmenumiddle
+                    //-                     .helpmenucircle
+                    //-                         i.fa.fa-male(aria-hidden='true')
+                    //-     div
+                    //-         | Chat

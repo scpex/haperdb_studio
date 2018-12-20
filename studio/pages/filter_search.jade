@@ -1,0 +1,230 @@
+extends ./layout
+
+block link
+  -var selected = 'Explore';
+block content
+  input#schemas(name="schemas", type="hidden", value="#{schemas}")
+  script(src="../../scripts/filter_search.js")
+  script(src="../../scripts/chart_sql_search.js")
+  script(src="../../scripts/generate_graph.js") 
+  // Breadcrumb
+  .breadcrumb-holder
+    .container-fluid
+      ul.breadcrumb
+        li.breadcrumb-item
+          a(href='/explore') Explore Home
+        li.breadcrumb-item.active Filter Search 
+  // Counts Section
+  .pagebox
+    section.dashboard-counts
+      header
+        .boxdisplay.largetitle
+          | Filter Search
+          a.btn.btn-main.dropdown-toggle.minwidthcombobox.pull-right(href='/explore/sql_search') SQL 
+      .container-fluid
+        .row
+          // Count item widget
+          .col-md-12
+            .btn-group(style='float:left')
+              select#selectSchema.form-controls(name="selectedSchema")
+                option.dropdown-item(value="") select Schema
+            .btn-group(style='float:left; margin-left:10px;')
+              select#selectTable.form-controls(name="selectedTable")
+                option.dropdown-item(value="") Select Table
+
+      .container-fluid.pt-5
+        #firstFilterColumn
+          .row.filterrow
+            // Count item widget
+            .col-md-12
+              .btn-group.minfiltertitle(style='float:left')
+                .boxdisplay-6 FILTER
+              .btn-group(style='float:left; margin-left:10px;')
+                select#selectAttribute.form-controls(name="selectedAttribute")
+                  option(value="") Select Column
+              .btn-group(style='float:left; margin-left:10px;')
+                select#selectAttribute.form-controls(name="selectedAttribute")
+                  option(value="=") =
+                  option(value="<") 
+                    | <
+                  option(value=">") 
+                    | >
+                  option(value="LIKE") LIKE
+                  option(value="IN") IN
+              div
+                input.form-controls.minwidthtextbox(type='text', placeholder='Enter Value', style='float:left; margin-left:10px; max-width:200px; margin-right:5px;')
+              .removeicon
+                i.fa.fa-times.text-red
+        #otherFilterColumn
+
+        .row.filterrow
+          // Count item widget
+          .col-md-12.mb-2
+            button#AddFilterColumn.btn.btn-mainadd.pull-left(type='button', aria-expanded='false', aria-haspopup='true')
+              i.fa.fa-plus(aria-hidden='true')
+        .row.filterrow
+          // Count item widget
+          .col-md-8
+            label.tree_label(data-target='#collapseExample', data-toggle='collapse', aria-controls='multiCollapseExample2', aria-expanded='false', style="font-size: 1.5rem;")
+              i.fa.fa-caret-down.mr-1
+              span Chart            
+            .collapse#collapseExample
+              div.text-white 
+                .row
+                  .col-md-3
+                    | Format your chart                    
+                    select#type-chart(name="").form-controls.minwidthcombobox Area
+                      option(value='Area') Area
+                      option(value='Bar') Bar
+                      option(value='Bubble') Bubble
+                      option(value='Column') Column
+                      option(value='Gauge') Gauge
+                      option(value='GeoChart') GeoChart
+                      option(value='Line') Line
+                      option(value='Map') Map
+                      option(value='Pie') Pie
+                      option(value='Scatter') Scatter
+                      option(value='SteppedArea') Stepped Area
+                      option(value='Treemap') Treemap
+                  .col-md-5
+                    | Chart Title
+                    input#chartTitle(type='text').form-controls
+                //- .pt-3 Chart Subtitle
+                //- input#chartSubtitle(type='text').form-controls
+                .pt-3 Axis
+                .pl-4
+                  .row
+                    .col-md-3
+                      .pt-3 X Axis Label
+                      select#hTitle(type='text').form-controls
+                    .col-md-3
+                      .pt-3 Y Axis Label
+                      select#vTitle(type='text').form-controls
+                .pt-3
+                  button.btn.btn-main.btn-b-10#filterGenerateChart Generate
+          .col-md-4
+            button#resetSqlBtn.btn.btn-main.minwidthcombobox.pull-right(type='button', aria-expanded='false', aria-haspopup='true') Reset
+            button#searchSqlBtn.btn.btn-main.minwidthcombobox.pull-right(type='button', aria-expanded='false', aria-haspopup='true', style='margin-right:10px;') Search
+        hr
+    header#collapseResult
+      .boxdisplay.largetitle
+        | Results
+        //- .pull-right
+        //-   i.fa.fa-sign-out
+        //- .pull-right
+        //-   i.fa.fa-save( data-target='#saveModalCenter', data-toggle='modal', style='margin-right:10px;')
+        //- .pull-right
+        //-   i.fa.fa-refresh(style='margin-right:10px;')
+      .container-fluid
+        .row
+          .col-md-12
+            table#resultTable.table.table-striped
+    #collapseResultChart.contentbackground.text-white.p-3.collapse
+      .boxdisplay
+        .secondheader
+          .midtitle
+            | Results
+            .pull-right 
+              i.fa.fa-sign-out(data-target='#shareLivelinkModal', data-toggle='modal', style='margin-right:10px;')
+            .pull-right
+              i.fa.fa-save(data-target='#saveLivelinkCenter', data-toggle='modal', style='margin-right:10px;')
+            .pull-right
+              i.fa.fa-refresh.fa-refresh-filter(style='margin-right:10px;')
+            .pull-right 
+              input.star-favor.mr-3#set-favor-star(style="margin-top: -20px" type='checkbox', title='bookmark', checked)
+            //- .pull-right
+              i.fa.fa-cog(data-target='#saveModalCenter', data-toggle='modal', style='margin-right:10px;')
+
+        div
+          .row(style='overflow:auto')
+            .col-md-12
+              div#chart_div.wrapper-graph
+
+    // Modal
+    #saveModalCenter.modal.fade(role='dialog', aria-hidden='true', aria-labelledby='exampleModalCenterTitle', tabindex='-1')
+      .modal-dialog.modal-dialog-centered(role='document')
+        .modal-content
+          form#favoriteForm
+            .modal-header
+              #exampleModalLongTitle.modal-title.text-white Save Search
+              button.close(data-dismiss='modal', type='button', aria-label='Close')
+                i.fa.fa-times.text-red
+            .modal-body
+              .row.filterrow.p-3
+                // Count item widget
+                .row.w-100
+                  .col-md-4.wtitle
+                    .boxdisplay-6.text-right Name
+                  .col-md-8
+                    input#favoriteName.form-controls.minwidthtextbox(type='text', style='float:left; max-width:250px; margin-right:5px;', required)
+                .row.w-100
+                  .col-md-4.wtitle
+                    .boxdisplay-6.text-right Live Resualts URL
+                  .col-md-8
+                    input.form-controls.minwidthtextbox#liveLinkSQL(type='text', style='float:left;  max-width:250px; margin-right:5px;', readonly)
+                    button.btn.btn-main.pull-left(type='button', aria-expanded='false', aria-haspopup='true', onclick="copySqlLink()") Copy
+                .row.w-100
+                  .col-md-4.wtitle
+                    .boxdisplay-6.text-right Notes
+                  .col-md-8
+                    input#favoriteNote.form-controls.minwidthtextbox.w-100(type='text', style='float:left; margin-right:5px;')
+            .modal-footer
+              .col-md-12.text-center
+                button.btn.btn-mainadd(type='submit', aria-expanded='false', aria-haspopup='true', style='min-width:150px; ')
+                  | Save
+    // share live link
+    #shareLivelinkModal.modal.fade(role='dialog', aria-hidden='true', aria-labelledby='exampleModalCenterTitle', tabindex='-1')
+      .modal-dialog.modal-dialog-centered(role='document')
+        .modal-content
+          form
+            .modal-header
+              #exampleModalLongTitle.modal-title.text-white Share Live Link Results 
+              button.close(data-dismiss='modal', type='button', aria-label='Close')
+                i.fa.fa-times.text-red
+            .modal-body
+              .row.filterrow.p-3
+                .row.w-100
+                  .col-md-4.wtitle
+                    .boxdisplay-6.text-right Live Results URL
+                  .col-md-8
+                    input.form-control.minwidthtextbox#liveLinkShareUrl(type='text', style='float:left;  max-width:250px; margin-right:5px;', readonly)
+                    button.btn.btn-main.pull-left(type='button', aria-expanded='false', aria-haspopup='true', onclick="copyLiveLinkShare()") Copy
+                .row.w-100
+                  .col-md-4.wtitle
+                    .boxdisplay-6.text-right Share Exisiting
+                  .col-md-8
+                    select#livelinkList.form-control.minwidthtextbox.w-100(type='text', style='float:left; margin-right:5px;') 
+
+
+    // save live link
+    #saveLivelinkCenter.modal.fade(role='dialog', aria-hidden='true', aria-labelledby='exampleModalCenterTitle', tabindex='-1')
+      .modal-dialog.modal-dialog-centered(role='document')
+        .modal-content
+          form#livelinkForm
+            .modal-header
+              #exampleModalLongTitle.modal-title.text-white Save Live Link
+              button.close(data-dismiss='modal', type='button', aria-label='Close')
+                i.fa.fa-times.text-red
+            .modal-body
+              .row.filterrow.p-3
+                // Count item widget
+                .row.w-100
+                  .col-md-4.wtitle
+                    .boxdisplay-6.text-right Name
+                  .col-md-8
+                    input#livelinkName.form-control.minwidthtextbox(type='text', style='float:left; max-width:250px; margin-right:5px;', required)
+                .row.w-100
+                  .col-md-4.wtitle
+                    .boxdisplay-6.text-right Live Results URL
+                  .col-md-8
+                    input.form-control.minwidthtextbox#liveLinkUrl(type='text', style='float:left;  max-width:250px; margin-right:5px;', readonly)
+                    button.btn.btn-main.pull-left(type='button', aria-expanded='false', aria-haspopup='true', onclick="copyLiveLinkNotSave()") Copy
+                .row.w-100
+                  .col-md-4.wtitle
+                    .boxdisplay-6.text-right Notes
+                  .col-md-8
+                    input#livelinkNote.form-control.minwidthtextbox.w-100(type='text', style='float:left; margin-right:5px;')
+            .modal-footer
+              .col-md-12.text-center
+                button.btn.btn-mainadd(type='submit', aria-expanded='false', aria-haspopup='true', style='min-width:150px; ')
+                  | Save

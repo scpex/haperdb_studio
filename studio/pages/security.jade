@@ -1,0 +1,115 @@
+extends ./layout
+
+block link
+  -var selected = 'Security';
+block content
+  script(src="scripts/security.js")
+  .pagebox
+    section.dashboard-counts
+      header
+        .boxdisplay.largetitle
+          | Security Hi #{user.username}
+          //- a.btn.btn-main.dropdown-toggle.minwidthcombobox.pull-right(href='sqlsearchchart.html') SQL Search
+      .container-fluid
+        input#users(type="hidden" value="#{users}")
+        input#user(type="hidden" value="#{user}")
+        input#currentUsername(type="hidden" value="#{user.username}")
+        .largetitle.pull-left
+          a.btn.btn-main.dropdown-toggle.minwidthcombobox(href='#' data-target='#addUserModal' data-toggle='modal'  data-backdrop="static") Add User
+          &nbsp
+          a.btn.btn-main.dropdown-toggle.minwidthcombobox(href='/security/add_role') Add Role
+        .wrapper.count-title.d-flex.pull-right
+          i.fa.fa-search(aria-hidden='true')
+          .name.ml-3
+            input#searchSecurity(type='text')
+    .dashboard-counts.clear.pt-3
+      .container-fluid
+        .row
+          .col-md-12
+            table.table.table-striped#usersTable
+              thead
+                tr
+                  //- th(scope='col')
+                  th(scope='col') Username
+                  th(scope='col') Role
+                  th(scope='col') Active
+                  th(scope='col') Failed Login Attempts
+                  th
+              tbody
+                //- each u in JSON.parse(users)                  
+                //-   tr.trclick
+                //-     //- td(onclick="goToEditUser('#{u.username}')")
+                //-     //-   i.fa.fa-user-circle.usericon
+                //-     td(onclick="goToEditUser('#{u.username}')")
+                //-       =u.username                      
+                //-     td(onclick="goToEditUser('#{u.username}')")
+                //-         if(u.role != undifiend)
+                //-           =u.role.role
+                //-         else
+                //-           | - 
+                //-     td
+                //-       if(u.active)
+                //-         if(nameOfUser != u.username)
+                //-           input.js-switch(type="checkbox", checked, onchange='toggleActive("#{u.username}");')
+                //-         else
+                //-           input.js-switch-disable(type="checkbox", checked, onchange='toggleActive("#{u.username}");')
+                //-       else
+                //-         input.js-switch(type="checkbox", onchange='toggleActive("#{u.username}");')
+                //-       //- span.switchery.switchery-default(style='background-color: rgb(100, 189, 99); border-color: rgb(100, 189, 99); box-shadow: rgb(100, 189, 99) 0px 0px 0px 16px inset; transition: border 0.4s, box-shadow 0.4s, background-color 1.2s;')
+                //-         small(style='left: 20px; background-color: rgb(255, 255, 255); transition: background-color 0.4s, left 0.2s;')
+                //-     td -
+                //-     td.midtitle2
+                //-       i.fa.fa-trash.ml-2(title="Delete", data-toggle="modal", data-target="#deleteUserModal", data-id="#{u.username}")
+      form#goToEditUser(method="post" action='/security/edit_user')
+        input#userToEdit(type="hidden", name="user" value="")
+  // Modal
+  #deleteUserModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true')
+      .modal-dialog.modal-dialog-centered(role='document')
+          .modal-content
+              .modal-header
+                  #exampleModalLongTitle.modal-title.text-white Are you sure?
+                  button.close(type='button', data-dismiss='modal', aria-label='Close')
+                      i.fa.fa-times.text-red
+              .modal-body.text-white
+                  p
+                      | Deleting this user is a permanent action and cannot be undone.
+              .modal-footer
+                  .col-md-12.p-0
+                      button#DeleteUserBtn.btn.btn-maindelete.pull-right(type='button', style='min-width:150px;', data-dismiss='modal', aria-haspopup='true', aria-expanded='false')
+                          | Delete
+                      button.btn.btn-mainexit.pull-left(type='button', style='min-width:150px;', data-dismiss='modal', aria-haspopup='true', aria-expanded='false')
+                          | Exit
+
+  #addUserModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true')
+    .modal-dialog.modal-dialog-centered(role='document')
+        form#addUserForm(action="#", method="post")
+            .modal-content
+                .modal-header
+                    #exampleModalLongTitle.modal-title.text-white New user
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        i.fa.fa-times.text-red
+                .modal-body.text-white
+                    .row
+                        // Count item widget
+                        .col-md-12
+                                .btn-group.clear.mt-1.mb-1(style='float:left;')
+                                    span.minwidth150.mr-2 username
+                                    input.form-controls(name="username", type='text', placeholder='username', required)
+                                .btn-group.clear.mt-1.mb-1(style='float:left;')
+                                    span.minwidth150.mr-2 password
+                                    input.form-controls(name="password", type='password', placeholder='password', required)
+                                .btn-group.clear.mt-1.mb-1(style='float:left;')
+                                    span.minwidth150.mr-2 role
+                                    select#selectRole.form-controls(name="role", placeholder='role', required)
+                                .btn-group.clear.mt-1.mb-1(style='float:left;')
+                                    span.minwidth150.mr-2 Active
+                                    label.mr-1(style='display:inline-block')
+                                        input(name="active", type='checkbox', checked='check')
+                                        | Active
+
+                .modal-footer
+                    .col-md-12.p-0.text-center
+                        input(type="hidden", name="schemaName" value="#{schemaName}")
+                        input#tableName(type="hidden", name="tableName" value="")
+                        button.btn.btn-mainadd#addCSVBtn(type='submit', style='min-width:150px;', aria-haspopup='true', aria-expanded='false')
+                            | Add

@@ -1,0 +1,194 @@
+/* your styles go here */
+
+.right-pagging {
+    text-align: right;
+}
+
+.textcomplete-dropdown li:hover,
+.textcomplete-dropdown .active {
+    background-color: rgb(110, 183, 219);
+}
+
+.textcomplete-dropdown a:hover {
+    cursor: pointer;
+}
+
+/* ————————————————————–
+  Tree core styles
+*/
+
+.trees {
+    margin: 0.5em;
+    margin-left: -55px;
+    margin-top: 20px;
+    list-style: none;
+}
+
+.trees input {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+}
+
+/* .trees input ~ ul { display: none; } */
+
+/* .trees input:checked ~ ul { display: block; } */
+
+/* ————————————————————–
+  Tree rows
+*/
+
+.trees ul {
+    list-style: none;
+}
+
+.trees li {
+    line-height: 1.2;
+    position: relative;
+    padding: 0 0 1em 1em;
+}
+
+.trees ul li {
+    padding: 0.5em 0 0 1em;
+}
+
+.trees>li:last-child {
+    padding-bottom: 0;
+}
+
+.datatable-over {
+    overflow: auto;
+}
+
+.form-controls {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+}
+
+.form-controls {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.close{
+    text-shadow: none;
+  }
+
+  .fa-trash{
+      padding-left:5px;
+  }
+
+.wrapper-graph{  
+    /* margin-left: 20px; */
+    margin: 0 auto;    
+    /* max-width: 1000px;     */
+    text-align: center;
+}
+
+a.btn-main:focus, a.btn-main:active{
+    color: #ffffff;
+    background-color: #00935A !important;
+    /* border-color: #403B8A; */
+    outline: 0;
+    box-shadow: none;
+}
+
+/* a.whitelink:hover, a.whitelink:focus, a.whitelink:active {
+    background-color: #00935A !important;
+} */
+a.whitelink .helpmenumiddle:hover, a.whitelink .helpmenumiddle:focus { 
+    color: #00935A !important;    
+}
+a.whitelink .helpmenucircle:hover, a.whitelink .helpmenucircle:focus {
+    border: solid 3px #00935A !important;
+}
+
+ul.tree .tree_label a:hover {
+    text-decoration: none !important;
+}
+
+.favorite-td {
+    width: 80%;
+    cursor: pointer;
+      
+}
+
+.favorite-td:hover{
+    color: #949ba2 !important;
+    background-color: transparent !important;
+    border-color: #4a4f5d !important;
+}
+.add-pointer, .add-pointer-times, .add-pointer-pencil {
+    cursor: pointer;
+}
+
+.add-pointer:hover {
+    cursor: pointer;
+    color: #949ba2 !important;
+    background-color: transparent !important;
+    border-color: #4a4f5d !important;
+}
+
+.add-pointer-times:hover {
+    cursor: pointer;
+    color: red !important;
+    background-color: transparent !important;
+    border-color: #4a4f5d !important;
+}
+
+.add-pointer-pencil:hover {
+    cursor: pointer;
+    color: green !important;
+    background-color: transparent !important;
+    border-color: #4a4f5d !important;
+}
+
+.star-favor {
+    visibility: hidden;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.star-favor:before {
+    content: "\2605";
+    position: absolute;
+    color: white;
+    opacity: 0.1;
+    visibility: visible;
+    margin-top: -18px;
+}
+.star-favor:hover::before {
+    content: "\2605";
+    position: absolute;
+    color: yellow;
+    opacity: 0.5;
+    visibility: visible;
+    margin-top: -18px;
+}
+
+.star-favor:checked:before {
+    content: "\2605";
+    color: yellow;
+    position: absolute;
+    margin-top: -18px;
+    opacity: 1;
+}
+
+.boxdisplay-sub {
+    color: #fff;
+    font-size: 1.5rem;
+}

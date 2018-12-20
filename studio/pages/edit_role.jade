@@ -1,0 +1,179 @@
+extends ./layout
+
+block link
+    -var selected = 'Security';
+block content
+    script(src="../../scripts/edit_role.js")
+    // Breadcrumb
+    .breadcrumb-holder
+        .container-fluid
+            ul.breadcrumb
+                li.breadcrumb-item
+                    a(href='/security') Security Home
+                li.breadcrumb-item.active Edit Role
+    // Counts Section
+    .pagebox
+        - var usedSchemas = JSON.stringify(schemas)
+        - var usedRoles = JSON.stringify(roles)
+        input#usedSchemas(type="hidden", name="usedSchemas" value="#{usedSchemas}")
+        input#usedRoles(type="hidden", name="usedRoles" value="#{usedRoles}")
+        input#flatenSchema(type="hidden", name="flatenSchema" value="#{flatenSchema}")
+
+        section.dashboard-counts
+            header
+                .boxdisplay
+                    | Search Roles  
+                    input#searchRole.ml-3(type='text')
+                    a.btn.btn-main.dropdown-toggle.minwidthcombobox.pull-right(href='/security/add_role') Add Role
+        each role in roles                        
+            section(id="#{role.role}")
+                hr
+                .clear
+                    .boxdisplay
+                        .pull-left
+                            .boxdisplay-6
+                                span.mr-3.largetext
+                                    a(href='#editname' class="editName", id='clickToChange_#{role.role}')
+                                        i.fa.fa-pencil
+                                    span(class="showName", id="showName_#{role.role}", data-toggle="collapse", data-target="#collapse_#{role.role}")
+                                        | #{role.role}
+                                //- input(id="#{role.role}_newRoleName", type='text' value="#{role.role}" hidden)
+                                span.ml-5.mr-3 Super User
+                                if role.permission.super_user                                   
+                                    input.js-switch(id="#{role.role}_superadmin", type='checkbox', checked='checked')
+                                else                                    
+                                    input.js-switch(id="#{role.role}_superadmin", type='checkbox')
+                        button.btn.btn-mainadd.pull-right.width100(data-toggle='modal', data-target='#EditRoleModal', type='button', aria-haspopup='true', data-id="#{role.id}" data-name="#{role.role}" aria-expanded='false')
+                            | Save
+                .clear.pt-3.collapse(id="collapse_#{role.role}")
+                    .boxdisplay
+                        .pull-left
+                            .boxdisplay-6
+                                span.mr-5 Schema
+                                span.ml-5.mr-3 Activate All
+                                input.js-switch.all-schema(id="#{role.role}_all", type='checkbox' class="allschema #{role.role}_all")
+                    .boxdisplay.form-group.clear
+                        each schemaVal, schemaProp in schemas
+                            ul.trees
+                                li
+                                    label.tree_label
+                                        i.fa.fa-caret-down
+                                        | #{schemaProp}
+                                    ul
+                                        li
+                                        label.tree_label
+                                        | Tables
+                                        span.ml-5.mr-3 Activate All
+                                        input.js-switch.schema(type='checkbox', id="#{role.role}_all_#{schemaProp}", class="alltables #{role.role}_all #{role.role}_all_#{schemaProp}")
+                                        if schemas[schemaProp] != undefined
+
+                                            each tableVal, tableProp in schemas[schemaProp]
+                                                li
+                                                    label.tree_label(style="width: 130px")
+                                                        i.fa.fa-caret-down
+                                                        | #{tableProp}
+                                                    span.ml-5.mr-3(style="text-align: right")    Activate All                                                    
+                                                    input.js-switch.table(type='checkbox', id="#{role.role}_all_#{schemaProp}_#{tableProp}", class="childTables #{role.role}_all #{role.role}_all_#{schemaProp} #{role.role}_all_#{schemaProp}_#{tableProp}")
+
+                                                    ul
+                                                        each resText, resProp in {'R': 'read', 'I': 'insert', 'U': 'update', 'D': 'delete'}
+                                                            li
+                                                                label.tree_label(title='#{resText}')
+                                                                    | #{resProp}
+                                                                    if role.permission[schemaProp] != undefined
+                                                                        if role.permission[schemaProp]["tables"][tableProp] != undefined
+                                                                            if role.permission[schemaProp]["tables"][tableProp][resText]
+                                                                                input.js-switch(type='checkbox', id="#{role.role}_all_#{schemaProp}_#{tableProp}_#{resProp}", class="#{role.role}_all #{role.role}_all_#{schemaProp} #{role.role}_all_#{schemaProp}_#{tableProp}", checked='checked')
+                                                                            else
+                                                                                input.js-switch(type='checkbox', id="#{role.role}_all_#{schemaProp}_#{tableProp}_#{resProp}", class="#{role.role}_all #{role.role}_all_#{schemaProp} #{role.role}_all_#{schemaProp}_#{tableProp}")
+                                                                        else
+                                                                            input.js-switch(type='checkbox', id="#{role.role}_all_#{schemaProp}_#{tableProp}_#{resProp}", class="#{role.role}_all #{role.role}_all_#{schemaProp} #{role.role}_all_#{schemaProp}_#{tableProp}")
+                                                                    else
+                                                                        input.js-switch(type='checkbox', id="#{role.role}_all_#{schemaProp}_#{tableProp}_#{resProp}", class="#{role.role}_all #{role.role}_all_#{schemaProp} #{role.role}_all_#{schemaProp}_#{tableProp}")
+
+                                                        li
+                                                            input(type='checkbox', checked='checked')
+                                                            label.tree_label
+                                                                i.fa.fa-caret-down
+                                                                |  Attribute Restrictions
+                                                            span.ml-5.mr-3 Activate All
+                                                            input.js-switch.attribute(type='checkbox', id="#{role.role}_all_#{schemaProp}_#{tableProp}_All", class="attributeAll #{role.role}_all #{role.role}_all_#{schemaProp} #{role.role}_all_#{schemaProp}_#{tableProp}")
+
+                                                            ul
+                                                                if schemas[schemaProp][tableProp] != undefined
+                                                                    if schemas[schemaProp][tableProp]["attributes"] != undefined
+                                                                        each attributesValue, attributesProp in schemas[schemaProp][tableProp]['attributes']
+                                                                            li
+                                                                                span(style="width: 80px;") #{attributesValue['attribute']}
+                                                                                span(style="width: 300px; text-align: right")                                                                                    
+                                                                                    if role.permission[schemaProp] != undefined                                                                                        
+                                                                                        if role.permission[schemaProp]["tables"][tableProp] != undefined
+                                                                                            if role.permission[schemaProp]["tables"][tableProp]["attribute_restrictions"] != undefined
+                                                                                                if role.permission[schemaProp]["tables"][tableProp]["attribute_restrictions"].length == schemas[schemaProp][tableProp]['attributes'].length
+                                                                                                    each eachAttRole in role.permission[schemaProp]["tables"][tableProp]["attribute_restrictions"]                                                                                                    
+                                                                                                        if eachAttRole.attribute_name == attributesValue['attribute']                                                                                                    
+                                                                                                            each attResText, attResProp in {'R': 'read', 'I': 'insert', 'U': 'update', 'D': 'delete'}                                                                                                         
+                                                                                                                if eachAttRole[attResText]                                                                                                            
+                                                                                                                    span.ml-3.mr-0(title='#{attResText}') #{attResProp}
+                                                                                                                    input.js-switch(class="#{role.role}_all #{role.role}_all_#{schemaProp} #{role.role}_all_#{schemaProp}_#{tableProp} #{role.role}_all_#{schemaProp}_#{tableProp}_All", type='checkbox', id="#{role.role}_all_#{schemaProp}_#{tableProp}_#{attributesValue['attribute']}_#{attResProp}", checked='checked')
+                                                                                                                else                                                                                                            
+                                                                                                                    span.ml-3.mr-0(title='#{attResText}') #{attResProp}
+                                                                                                                    input.js-switch(class="#{role.role}_all #{role.role}_all_#{schemaProp} #{role.role}_all_#{schemaProp}_#{tableProp} #{role.role}_all_#{schemaProp}_#{tableProp}_All", type='checkbox', id="#{role.role}_all_#{schemaProp}_#{tableProp}_#{attributesValue['attribute']}_#{attResProp}")
+                                                                                                else
+                                                                                                    each attResText, attResProp in {'R': 'read', 'I': 'insert', 'U': 'update', 'D': 'delete'}                                                                                                
+                                                                                                        span.ml-3.mr-0(title='#{attResText}') #{attResProp}
+                                                                                                        input.js-switch(class="#{role.role}_all #{role.role}_all_#{schemaProp} #{role.role}_all_#{schemaProp}_#{tableProp} #{role.role}_all_#{schemaProp}_#{tableProp}_All", type='checkbox', id="#{role.role}_all_#{schemaProp}_#{tableProp}_#{attributesValue['attribute']}_#{attResProp}")
+                                                                                            else
+                                                                                                each attResText, attResProp in {'R': 'read', 'I': 'insert', 'U': 'update', 'D': 'delete'}                                                                                                
+                                                                                                    span.ml-3.mr-0(title='#{attResText}') #{attResProp}
+                                                                                                    input.js-switch(class="#{role.role}_all #{role.role}_all_#{schemaProp} #{role.role}_all_#{schemaProp}_#{tableProp} #{role.role}_all_#{schemaProp}_#{tableProp}_All", type='checkbox', id="#{role.role}_all_#{schemaProp}_#{tableProp}_#{attributesValue['attribute']}_#{attResProp}")
+                                                                                        else                                                                                        
+                                                                                            each attResText, attResProp in {'R': 'read', 'I': 'insert', 'U': 'update', 'D': 'delete'}                                                                                                
+                                                                                                span.ml-3.mr-0(title='#{attResText}') #{attResProp}
+                                                                                                input.js-switch(class="#{role.role}_all_#{schemaProp} #{role.role}_all_#{schemaProp}_#{tableProp} #{role.role}_all_#{schemaProp}_#{tableProp}_All", type='checkbox', id="#{role.role}_all_#{schemaProp}_#{tableProp}_#{attributesValue['attribute']}_#{attResProp}")
+                                                                                    else
+                                                                                        each attResText, attResProp in {'R': 'read', 'I': 'insert', 'U': 'update', 'D': 'delete'}
+                                                                                            span.ml-3.mr-0(title='#{attResText}') #{attResProp}
+                                                                                            input.js-switch(class="#{role.role}_all #{role.role}_all_#{schemaProp} #{role.role}_all_#{schemaProp}_#{tableProp} #{role.role}_all_#{schemaProp}_#{tableProp}_All", type='checkbox', id="#{role.role}_all_#{schemaProp}_#{tableProp}_#{attributesValue['attribute']}_#{attResProp}")
+
+                        header
+                            .boxdisplay.largetitle
+                                .pull-right
+                                    i.fa.fa-trash(data-toggle='modal', data-target='#deleteRole', style='margin-right:10px;' data-id="#{role.id}", data-name="#{role.role}")
+                br
+                br
+    #EditRoleModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true')
+        .modal-dialog.modal-dialog-centered(role='document')
+            .modal-content
+                .modal-header
+                    .modal-title.text-white Are you sure?
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        i.fa.fa-times.text-red
+                .modal-body.text-white
+                    P#textRoleName                                                                 
+                        span
+                .modal-footer
+                    .col-md-12.p-0
+                        button#SaveEditRoleBtn.btn.btn-mainadd.pull-right(type='button', style='min-width:150px;', data-dismiss='modal', aria-haspopup='true', aria-expanded='false')
+                            | Confirm
+                        button.btn.btn-mainexit.pull-left(type='button', style='min-width:150px;', data-dismiss='modal', aria-haspopup='true', aria-expanded='false')
+                            | Exit
+
+
+    #deleteRole.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true')
+        .modal-dialog.modal-dialog-centered(role='document')
+            .modal-content
+                .modal-header
+                    #exampleModalLongTitle.modal-title.text-white Are you sure?
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        i.fa.fa-times.text-red
+                .modal-body.text-white
+                    p
+                        | Deleting this role is a permanent action and cannot be undone.
+                .modal-footer
+                    .col-md-12.p-0
+                        button#DeleteRoleBtn.btn.btn-maindelete.pull-right(type='button', style='min-width:150px;',  aria-haspopup='true', aria-expanded='false')
+                            | Delete
+                        button.btn.btn-mainexit.pull-left(type='button', style='min-width:150px;', data-dismiss='modal', aria-haspopup='true', aria-expanded='false')
+                            | Exit
+
