@@ -1,0 +1,149 @@
+{
+	"id": "d91056dc-31f1-7d1e-f96e-f46a5152345b",
+	"name": "harper_northnwd_env",
+	"values": [
+		{
+			"key": "host",
+			"value": "hdb",
+			"enabled": true
+		},
+		{
+			"key": "port",
+			"value": "9925",
+			"enabled": true
+		},
+		{
+			"key": "username",
+			"value": "admin",
+			"enabled": true
+		},
+		{
+			"key": "password",
+			"value": "admin!",
+			"enabled": true
+		},
+		{
+			"key": "schema",
+			"value": "northwnd",
+			"enabled": true
+		},
+		{
+			"key": "files_location",
+			"value": "/opt/northwnd/",
+			"enabled": true
+		},
+		{
+			"key": "emps_tb",
+			"value": "employees",
+			"enabled": true
+		},
+		{
+			"key": "emps_id",
+			"value": "employeeid",
+			"enabled": true
+		},
+		{
+			"key": "ords_tb",
+			"value": "orders",
+			"enabled": true
+		},
+		{
+			"key": "ords_id",
+			"value": "orderid",
+			"enabled": true
+		},
+		{
+			"key": "ordd_tb",
+			"value": "order_details",
+			"enabled": true
+		},
+		{
+			"key": "ordd_id",
+			"value": "orderid",
+			"enabled": true
+		},
+		{
+			"key": "prod_tb",
+			"value": "products",
+			"enabled": true
+		},
+		{
+			"key": "prod_id",
+			"value": "productid",
+			"enabled": true
+		},
+		{
+			"key": "cust_tb",
+			"value": "customers",
+			"enabled": true
+		},
+		{
+			"key": "cust_id",
+			"value": "customerid",
+			"enabled": true
+		},
+		{
+			"key": "cate_tb",
+			"value": "categories",
+			"enabled": true
+		},
+		{
+			"key": "cate_id",
+			"value": "categoryid",
+			"enabled": true
+		},
+		{
+			"key": "supp_tb",
+			"value": "suppliers",
+			"enabled": true
+		},
+		{
+			"key": "supp_id",
+			"value": "supplierid",
+			"enabled": true
+		},
+		{
+			"key": "ship_tb",
+			"value": "shippers",
+			"enabled": true
+		},
+		{
+			"key": "ship_id",
+			"value": "shipperid",
+			"enabled": true
+		},
+		{
+			"key": "empt_tb",
+			"value": "employeeterritories",
+			"enabled": true
+		},
+		{
+			"key": "empt_id",
+			"value": "employeeid",
+			"enabled": true
+		},
+		{
+			"key": "terr_tb",
+			"value": "territories",
+			"enabled": true
+		},
+		{
+			"key": "terr_id",
+			"value": "territoryid",
+			"enabled": true
+		},
+		{
+			"key": "regi_tb",
+			"value": "region",
+			"enabled": true
+		},
+		{
+			"key": "regi_id",
+			"value": "regionid",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2018-12-20T08:12:19.641Z",
+	"_postman_exported_using": "Postman/6.6.1"
+}

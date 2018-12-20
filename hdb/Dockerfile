@@ -12,6 +12,11 @@ COPY . /opt
 
 RUN cd /opt &&\
     apt-get update &&\
+    apt-get install -y curl &&\
+    curl -sL https://deb.nodesource.com/setup_10.x | bash - &&\
+    apt-get install -y nodejs &&\
+    apt-get install -y build-essential &&\
+    npm install -g newman &&\
     tar -xvf ${harperdbfile} &&\
     rm ${harperdbfile} &&\
     mkdir -p /hdb &&\
@@ -19,7 +24,7 @@ RUN cd /opt &&\
     cd ${workdir} &&\
     ./harperdb install --TC_AGREEMENT yes --HDB_ROOT ${datadir} --HTTP_PORT ${httpport} --HTTPS_PORT ${httpsport} --HDB_ADMIN_USERNAME ${username} --HDB_ADMIN_PASSWORD ${password} --HDB_REGISTER false &&\
     sleep 1s && cd /bin &&\
-    echo '#!/bin/bash \ncd /opt/HarperDB/bin && ./harperdb start && bash' > start_hdb &&\
+    echo '#!/bin/bash \ncd /opt/HarperDB/bin && ./harperdb start && cd /opt/postman && newman run insert_test_data.json -e environment.json --delay-request 200 && bash' > start_hdb &&\
     chmod +x start_hdb
 
 WORKDIR ${workdir}
