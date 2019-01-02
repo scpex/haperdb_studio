@@ -40,4 +40,6 @@ deploy:
 script:
   - docker --version
   - docker-compose --version
+  - pwd
+  - ls -la
   
