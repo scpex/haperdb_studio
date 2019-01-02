@@ -15,6 +15,7 @@ before_script:
   - node --version
   - npm --version
   - node_modules/.bin/newman --version
+  - cd ./studio 
   - rm -rf ./node_mules/*
   - rm package-lock.json
   - npm install 
