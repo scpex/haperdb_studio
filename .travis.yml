@@ -37,5 +37,5 @@ deploy:
     branch: master
     
 script:
-  - docker-compose up
+  - docker-compose build
   
