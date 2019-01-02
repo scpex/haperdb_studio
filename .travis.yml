@@ -30,7 +30,7 @@ before_script:
 
 deploy:
   provider: script
-  script: bash docker docker_compose
+  script: bash
   skip-cleanup: true
   github-token: ${tokenhdbstdfortravisci}
   keep-history: true
@@ -40,6 +40,9 @@ deploy:
 script:
   - docker --version
   - docker-compose --version
+  - cd ..
   - pwd
   - ls -la
+  - docker-compose build
+  - docker-compose up
   
