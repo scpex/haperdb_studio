@@ -38,5 +38,6 @@ deploy:
     branch: master
     
 script:
-  - docker-compose build
+  - docker --version
+  - docker-compose --version
   
