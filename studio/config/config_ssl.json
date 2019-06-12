@@ -1,8 +1,0 @@
-{
-  "default_host":"localhost",
-  "default_port":9925,
-  "https_port":9090,
-  "https_key_path":"/certs/server.key",
-  "https_cert_path":"/certs/server.cert",
-  "logging_level":"error"
-}

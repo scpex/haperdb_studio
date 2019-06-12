@@ -1,9 +1,0 @@
-{
-  "default_host": "hdb",
-  "default_port": 9925,
-  "http_port": 8080,
-  "https_port": 31283,
-  "protocol": "http",
-  "logging_level": "error",
-  "log_location": "./log/hdb_studio_log.log"
-}
