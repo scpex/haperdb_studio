@@ -2,8 +2,8 @@ FROM node:10
 
 WORKDIR /usr/src
 
-RUN git clone https://github.com/HarperDB/HarperDB_Studio.git ./ \
-    cd HarperDB_Studio && npm install
+RUN git clone https://github.com/HarperDB/HarperDB_Studio.git
+RUN cd HarperDB_Studio && npm install
 
 EXPOSE 8080
 
